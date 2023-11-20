@@ -1,0 +1,8 @@
+SELECT s.BuyerEmail
+FROM Sales s
+JOIN (
+    SELECT SaleID, SUM(ProductQuantity * ProductPrice) AS DailyTotalPayment
+    FROM SalesDetails
+    GROUP BY SaleID, CONVERT(date, SaleDate)  
+    HAVING SUM(ProductQuantity * ProductPrice) / COUNT(DISTINCT CONVERT(date, SaleDate)) > 1000
+) sd ON s.SaleID = sd.SaleID;
